@@ -1,0 +1,23 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  kafka:
+    bootstrap-servers: localhost:29092
+    listener:
+      ack-mode: record
+    consumer:
+      group-id: EmailConfirmation
+      autoOffsetReset: earliest
+      keyDeserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      valueDeserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    properties:
+      spring:
+        deserializer:
+          key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+          value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+#          json.trusted.packages: "*"
+
+kafka:
+  topics:
+    sendConfirmationEmail: sendConfirmationEmail
