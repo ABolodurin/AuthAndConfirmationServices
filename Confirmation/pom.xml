@@ -20,10 +20,25 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ru.bolodurin</groupId>
 			<artifactId>authentication-app</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.bolodurin</groupId>
+			<artifactId>authentication-app-logging</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
@@ -52,6 +67,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -2,6 +2,7 @@ package ru.bolodurin.confirmation.config;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -16,6 +17,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.support.serializer.DelegatingByTopicDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import ru.bolodurin.services.authentication.kafka.message.EmailConfirmationMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
     @Value("${kafka.topics.sendConfirmationEmail}")
-    private String topic;
+    private String confirmTopic;
 
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> factory() {
@@ -44,12 +46,7 @@ public class KafkaConsumerConfig {
 
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-
-//        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-//        properties.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-//        properties.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-
+        properties.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
         return properties;
     }
@@ -59,12 +56,11 @@ public class KafkaConsumerConfig {
     }
 
     private Deserializer<Object> byTopicDeserializer() {
-        StringDeserializer deserializer = new StringDeserializer();
-//        JsonDeserializer<EmailConfirmationMessage> deserializer = new JsonDeserializer<>();
-//        deserializer.addTrustedPackages("*");
+        JsonDeserializer<EmailConfirmationMessage> deserializer = new JsonDeserializer<>();
         return new DelegatingByTopicDeserializer(Map.of(
-                Pattern.compile(topic), deserializer),
-                new JsonDeserializer<>());
+                Pattern.compile(confirmTopic), deserializer,
+                Pattern.compile("Log"), deserializer),
+                new StringDeserializer());
     }
 
 }

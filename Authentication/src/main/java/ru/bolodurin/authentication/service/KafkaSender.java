@@ -6,6 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.bolodurin.authentication.model.entity.ConfirmationToken;
+import ru.bolodurin.services.authentication.kafka.message.EmailConfirmationMessage;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +25,8 @@ public class KafkaSender {
         List<ConfirmationToken> tokens = service.getUnsent();
 
         if (!tokens.isEmpty()) tokens.forEach(t -> {
-            kafkaTemplate.send(kafkaTopic, "mailto: " + t.getEmail() + " /register?t=" + t.getToken());
+//            kafkaTemplate.send(kafkaTopic, "mailto: " + t.getEmail() + " /register?t=" + t.getToken());
+            kafkaTemplate.send(kafkaTopic, new EmailConfirmationMessage(t.getEmail(), t.getToken()));
             service.changeStatusToSent(t);
         });
     }

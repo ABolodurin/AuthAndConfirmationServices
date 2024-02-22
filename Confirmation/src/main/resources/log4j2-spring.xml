@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+<Properties>
+    <Property name="KafkaAppender.server">localhost:29092</Property>
+    <Property name="KafkaAppender.topic">Log</Property>
+</Properties>
+<Appenders>
+    <Console name="CONSOLE" target="SYSTEM_OUT">
+        <PatternLayout pattern="[%-5level] %-60C{1.} [%d{MM.dd HH:mm:ss}] - %msg %n"/>
+    </Console>
+
+    <KafkaAppender name="KafkaAppender" server="${KafkaAppender.server}" topic="${KafkaAppender.topic}"/>
+</Appenders>
+
+<Loggers>
+    <Logger name="ru.bolodurin.confirmation" level="WARN" additivity="false">
+        <AppenderRef ref="KafkaAppender"/>
+    </Logger>
+    <Root level="INFO">
+        <AppenderRef ref="CONSOLE"/>
+    </Root>
+</Loggers>
+</Configuration>

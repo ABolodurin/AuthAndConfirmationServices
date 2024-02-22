@@ -1,4 +1,4 @@
 package ru.bolodurin.confirmation.model;
 
-public record EmailModel(String email) {
+public record EmailModel(String email, String body) {
 }
