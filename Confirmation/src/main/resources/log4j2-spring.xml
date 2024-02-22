@@ -2,7 +2,7 @@
 <Configuration>
 <Properties>
     <Property name="KafkaAppender.server">localhost:29092</Property>
-    <Property name="KafkaAppender.topic">Log</Property>
+    <Property name="KafkaAppender.topic">log</Property>
 </Properties>
 <Appenders>
     <Console name="CONSOLE" target="SYSTEM_OUT">

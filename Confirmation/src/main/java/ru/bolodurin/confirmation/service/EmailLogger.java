@@ -1,17 +1,17 @@
 package ru.bolodurin.confirmation.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.bolodurin.confirmation.model.EmailModel;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
-public class ConsoleLogger implements EmailSender {
+public class EmailLogger implements EmailSender {
     @Override
-    @Transactional
     public void sendConfirmationEmail(EmailModel model) {
-        System.out.println(model.email());
+        log.warn("Sending token " + model.body() + " to " + model.email());
     }
 
 }

@@ -13,3 +13,4 @@ spring:
 kafka:
   topics:
     sendConfirmationEmail: sendConfirmationEmail
+    log: log

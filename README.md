@@ -6,6 +6,7 @@ ___
 
 Клонировать репозиторий
 - в терминале из пакета ExternalLibrary выполнить ```mvn clean install```
+- в терминале из пакета AuthAppLogAppender выполнить ```mvn clean install```
 - в терминале корня проекта выполнить ```docker compose -f .\docker-compose.yml up```
 - запустить проект Confirmation
 - запустить проект Authentication
@@ -21,7 +22,7 @@ ___
 }
 ``` 
 - /register принимает запросом ```GET``` в параметре ```t``` токен подтверждения регистрации.
-    Этот токен прилетает сервису Confirmation в формате ```UUID```
+    Этот токен прилетает в консоль сервису Confirmation в формате ```UUID```
 - /login принимает запросом ```POST``` модель
 ```json
 {
