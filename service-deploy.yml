@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: confirmation-service
+spec:
+  selector:
+    app: confirmation-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8090
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentication-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: authentication-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30010
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conf-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: confirmation-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: confirmation-service
+    spec:
+      containers:
+        - name: confirmation-service
+          image: confirmation-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8090
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configmap
+                  key: kafka-bootstrap-server
+            - name: KAFKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configmap
+                  key: kafka-port
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: authentication-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: authentication-service
+    spec:
+      containers:
+        - name: authentication-service
+          image: authentication-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8090
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configmap
+                  key: kafka-bootstrap-server
+            - name: DATASOURCE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configmap
+                  key: postgres-host
+            - name: DATASOURCE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configmap
+                  key: postgres-port
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configmap
+                  key: postgres-db-name
+            - name: DATASOURCE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: service-credentials
+                  key: postgres_user
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: service-credentials
+                  key: postgres_password
+            - name: KAFKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configmap
+                  key: kafka-port
