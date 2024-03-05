@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 <Properties>
-    <Property name="KafkaAppender.server">localhost:29092</Property>
+    <Property name="KafkaAppender.server">${env:KAFKA_BOOTSTRAP_SERVER}:${env:KAFKA_PORT}</Property>
     <Property name="KafkaAppender.topic">log</Property>
 </Properties>
 <Appenders>

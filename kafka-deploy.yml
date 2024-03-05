@@ -42,17 +42,7 @@ spec:
                 configMapKeyRef:
                   name: service-configmap
                   key: zookeeper-server
-            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: INTERNAL://kafka-service:9092,EXTERNAL_SAME_HOST://localhost:29092
+              value: PLAINTEXT://kafka-service:29092
             - name: KAFKA_LISTENERS
-              value: EXTERNAL_SAME_HOST://:29092,INTERNAL://:9092
-            - name: KAFKA_INTER_BROKER_LISTENER_NAME
-              value: INTERNAL
-            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
-              value: "1"
-            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
-              value: "1"
-            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
-              value: "1"
+              value: PLAINTEXT://0.0.0.0:29092
